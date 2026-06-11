@@ -1,0 +1,1 @@
+export { createTicketsApi } from './ticketsApi'

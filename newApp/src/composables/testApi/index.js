@@ -1,0 +1,1 @@
+export { useGlpiTest } from './useGlpiTest'

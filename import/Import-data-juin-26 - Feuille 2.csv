@@ -1,0 +1,9 @@
+Ref_Ticket,Date,Heure,Type,Titre,Description,Status,Priority,Items
+1,03/06/2026,13:45,Incident,Tsy mandeha,hafahafa be,New,Medium,"[""PC-ADM-001"", ""PC-ADM-001""]"
+2,04/06/2026,13:45,Incident,Michauffe,mamay be,New,Medium,"[""PC-ADM-001"",""MN-FORM-002""]"
+3,05/06/2026,13:45,Request,Installation logiciel,Installer un logiciel de comptabilité,New,High,
+4,06/06/2026,13:45,Incident,Problème de connexion,Impossible de se connecter au réseau,New,High,"[""PC-FORM-001""]"
+5,07/06/2026,13:45,Request,Demande de matériel,Demande d'un nouvel ordinateur pour le laboratoire IA,In progress (assigned),Medium,"[""PC-FORM-001""]"
+6,08/06/2026,13:45,Incident,Problème d'impression,Les impressions sortent en brouillon,Closed,Medium,"[""PC-COMPTA-001""]"
+7,09/06/2026,13:45,Request,Demande de formation,Demande de formation sur le nouvel outil de gestion,In progress (assigned),Low,"[""PH-FORM-001""]"
+7,09/06/2026,13:45,Request,Demande de formation,Demande de formation sur le nouvel outil de gestion,In progress (assigned),Low,"[""PH-FORM-001""]"
