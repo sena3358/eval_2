@@ -161,6 +161,13 @@ export const createTicketsApi = ({ getToken = () => authState.sessionToken } = {
     return res.ok ? (Array.isArray(res.data) ? res.data : []) : []
   }
 
+  // Recupere tous les couts globaux (pour synthese)
+  const getGlpiCosts = async () => {
+    requireSession()
+    const res = await glpi.request('/TicketCost?range=0-1000', withSession())
+    return Array.isArray(res.data) ? res.data : []
+  }
+
   // Ajoute une solution a un ticket
   const addTicketSolution = async (ticketId, content) => {
     requireSession()
@@ -214,6 +221,7 @@ export const createTicketsApi = ({ getToken = () => authState.sessionToken } = {
     getTicketFollowups,
     getTicketSolutions,
     getTicketCosts,
+    getGlpiCosts,
     addTicketSolution,
     addTicketCost,
   }

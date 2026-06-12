@@ -58,11 +58,20 @@ const logout = async () => {
             <i class="bi bi-plus-circle-fill text-success"></i>
             <span>Créer un ticket</span>
           </router-link>
+
+          <router-link 
+            to="/front/costs-summary" 
+            class="nav-link sidebar-link d-flex align-items-center gap-3"
+            :class="{ active: isActive('/front/costs-summary') }"
+          >
+            
+            <span>list cout</span>
+          </router-link>
         </div>
       </div>
     </div>
 
-    <div class="sidebar-footer p-3 border-top border-secondary-subtle bg-dark-subtle">
+    <!-- <div class="sidebar-footer p-3 border-top border-secondary-subtle bg-dark-subtle">
       <div class="user-card d-flex align-items-center gap-2 mb-3 px-2">
         <div class="user-avatar text-bg-success">
           {{ userName.charAt(0).toUpperCase() }}
@@ -76,7 +85,7 @@ const logout = async () => {
         <i class="bi bi-box-arrow-right"></i>
         <span>Déconnexion</span>
       </button>
-    </div>
+    </div> -->
   </nav>
 </template>
 

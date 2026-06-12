@@ -2,6 +2,7 @@ import { ref, computed, onMounted } from 'vue'
 import { createTicketsApi } from '../../../services/tickets/ticketsApi'
 import { foAuthState } from '../../../services/frontoffice/auth/foAuthSession'
 import { kanbanSettingsApi } from '../../../services/tickets/kanbanSettingsApi'
+import { sqliteCostApi } from '../../../services/testBackSqlite/sqliteCostApi'
 
 /**
  * Mapping des colonnes Kanban vers les statuts GLPI.
@@ -43,7 +44,6 @@ export const useTicketsKanban = () => {
     })
 
     return KANBAN_COLUMNS.map(col => {
-      // Application des reglages personnalises (SQLite)
       const settings = customSettings.value
       let colLabel = col.label
       let colBg = col.bg
@@ -70,17 +70,13 @@ export const useTicketsKanban = () => {
     })
   })
 
-  // Initialisation au premier appel
   fetchSettings()
 
   const fetchTickets = async () => {
     loading.value = true
     error.value = ''
     try {
-      // Pour le Kanban FO, on recupere une liste assez large (ex: 50 derniers tickets)
-      // car la pagination par colonne est complexe sans filtrage cote serveur par statut.
       const res = await api.listTickets({ start: 0, limit: 1000 })
-      // Tri par date decroissante (plus recents en haut des colonnes)
       tickets.value = (res.items || []).sort((a,b) => b.id - a.id)
     } catch (e) {
       error.value = e.message || 'Impossible de charger les tickets'
@@ -89,14 +85,11 @@ export const useTicketsKanban = () => {
     }
   }
 
-  const moveTicket = async (ticketId, targetColumnId, { assignUserId = null, solutionContent = null } = {}) => {
+  const moveTicket = async (ticketId, targetColumnId, { assignUserId = null, solutionContent = null, cost = 0 } = {}) => {
     const targetCol = KANBAN_COLUMNS.find(c => c.id === targetColumnId)
     if (!targetCol) return
 
-    // On prend le statut principal de la colonne cible
     const newStatus = targetCol.statuses[0]
-    
-    // Optimisme UI : mise a jour locale avant l'appel API
     const ticketIndex = tickets.value.findIndex(t => t.id === ticketId)
     if (ticketIndex === -1) return
     
@@ -104,22 +97,28 @@ export const useTicketsKanban = () => {
     tickets.value[ticketIndex].status = newStatus
 
     try {
+      // 1. Gestion du coût SQLite si présent
+      if (cost > 0) {
+        const items = await api.getTicketItems(ticketId)
+        const types = [...new Set(items.map(it => it.itemtype))]
+        const finalTypes = types.length > 0 ? types : ['Inconnu']
+        const splitCost = cost / finalTypes.length
+        
+        const batch = finalTypes.map(type => ({
+          ticketId: String(ticketId),
+          itemtype: type,
+          cost: splitCost
+        }))
+        await sqliteCostApi.saveCostsBatch(batch)
+      }
+
+      // 2. Mise à jour GLPI
       const input = { status: newStatus }
+      if (assignUserId) input._users_id_assign = assignUserId
+      if (solutionContent) await api.addTicketSolution(ticketId, solutionContent)
       
-      // Si on assigne un utilisateur
-      if (assignUserId) {
-        input._users_id_assign = assignUserId
-      }
-
-      // Si on ajoute une solution
-      if (solutionContent) {
-        await api.addTicketSolution(ticketId, solutionContent)
-      }
-
-      // Mise a jour du statut
       await api.updateTicket(ticketId, input)
     } catch (e) {
-      // Rollback en cas d'erreur
       tickets.value[ticketIndex].status = oldStatus
       error.value = `Erreur lors du changement de statut : ${e.message}`
     }
@@ -130,6 +129,13 @@ export const useTicketsKanban = () => {
     loading,
     error,
     fetchTickets,
-    moveTicket
+    moveTicket,
+    // Utilitaire pour le dialogue
+    getTicketItemTypes: async (ticketId) => {
+      try {
+        const items = await api.getTicketItems(ticketId)
+        return [...new Set(items.map(it => it.itemtype))]
+      } catch { return [] }
+    }
   }
 }

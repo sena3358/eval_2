@@ -7,9 +7,13 @@ import AssignTechnicianDialog from '../../../components/frontoffice/tickets/Assi
 import AddSolutionDialog from '../../../components/frontoffice/tickets/AddSolutionDialog.vue'
 
 const router = useRouter()
-const { columns, loading, error, fetchTickets, moveTicket } = useTicketsKanban()
+const { 
+  columns, loading, error, 
+  fetchTickets, moveTicket, getTicketItemTypes 
+} = useTicketsKanban()
 
 const selectedTicket = ref(null)
+const selectedItemTypesCount = ref(0)
 
 // Gestion des modales d'interception
 const showAssign = ref(false)
@@ -36,11 +40,13 @@ const handleDrop = async ({ ticketId, targetColumnId }) => {
 
   // 2. Interception pour "Terminé" (id: done)
   if (targetColumnId === 'done') {
-    // On trouve le ticket dans les colonnes existantes (new ou progress)
     const ticket = columns.value.flatMap(c => c.items).find(t => t.id === ticketId)
     if (ticket) {
       pendingMove.value = { ticketId, targetColumnId }
       selectedTicket.value = ticket
+      // On pré-récupère le nombre de types d'items pour le calcul du coût
+      const types = await getTicketItemTypes(ticketId)
+      selectedItemTypesCount.value = types.length
       showSolution.value = true
       return
     }
@@ -57,9 +63,12 @@ const confirmAssign = async ({ userId }) => {
   }
 }
 
-const confirmSolution = async ({ solution }) => {
+const confirmSolution = async ({ solution, cost }) => {
   if (pendingMove.value) {
-    await moveTicket(pendingMove.value.ticketId, pendingMove.value.targetColumnId, { solutionContent: solution })
+    await moveTicket(pendingMove.value.ticketId, pendingMove.value.targetColumnId, { 
+      solutionContent: solution,
+      cost: cost
+    })
     showSolution.value = false
     pendingMove.value = null
   }
@@ -136,6 +145,7 @@ const goToAddTicket = () => {
     <AddSolutionDialog
       :show="showSolution"
       :ticket="selectedTicket"
+      :itemTypesCount="selectedItemTypesCount"
       @close="showSolution = false"
       @confirm="confirmSolution"
     />

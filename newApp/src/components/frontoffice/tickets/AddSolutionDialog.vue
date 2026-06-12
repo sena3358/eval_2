@@ -3,23 +3,26 @@ import { ref, watch } from 'vue'
 
 const props = defineProps({
   show: { type: Boolean, default: false },
-  ticket: { type: Object, default: null }
+  ticket: { type: Object, default: null },
+  itemTypesCount: { type: Number, default: 0 }
 })
 
 const emit = defineEmits(['close', 'confirm'])
 
 const solution = ref('')
+const cost = ref(0)
 const loading = ref(false)
 
 watch(() => props.show, (newVal) => {
   if (newVal) {
     solution.value = ''
+    cost.value = 0
   }
 })
 
 const handleConfirm = () => {
   if (!solution.value.trim()) return
-  emit('confirm', { solution: solution.value })
+  emit('confirm', { solution: solution.value, cost: cost.value })
 }
 </script>
 
@@ -56,6 +59,23 @@ const handleConfirm = () => {
             placeholder="Décrivez précisément ce qui a été fait pour résoudre le problème..."
             autofocus
           ></textarea>
+        </div>
+
+        <div class="form-group mb-4">
+          <label class="form-label small fw-bold text-muted mb-2">COÛT FIXÉ (Optionnel - €)</label>
+          <div class="input-group">
+            <span class="input-group-text border-0 bg-light rounded-start-3 text-muted">€</span>
+            <input 
+              v-model.number="cost" 
+              type="number" 
+              class="form-control border-0 bg-light rounded-end-3 p-3" 
+              placeholder="0.00"
+            />
+          </div>
+          <div v-if="itemTypesCount > 1 && cost > 0" class="mt-2 text-info small fw-medium">
+            <i class="bi bi-info-circle me-1"></i>
+            Ce coût sera divisé par {{ itemTypesCount }} types d'équipements ({{ (cost / itemTypesCount).toFixed(2) }}€ chacun).
+          </div>
         </div>
 
         <div class="alert alert-info border-0 rounded-3 small d-flex gap-3 mb-0">

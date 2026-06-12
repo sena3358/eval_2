@@ -17,6 +17,7 @@ import { foIsAuthenticated } from '../services/frontoffice/auth/foAuthSession'
 import { useFoAuth } from '../composables/frontoffice/auth/useFoAuth'
 import TicketsKanbanPage from '../pages/frontoffice/tickets/TicketsKanbanPage.vue'
 import KanbanSettingsPage from '../pages/dashboard/KanbanSettingsPage.vue'
+import CostsSummaryPage from '../pages/dashboard/CostsSummaryPage.vue'
 
 const routes = [
   // --- Back Office ---
@@ -78,6 +79,12 @@ const routes = [
     path: '/front/tickets/kanban',
     name: 'fo-tickets-kanban',
     component: TicketsKanbanPage,
+    meta: { layout: 'frontoffice', area: 'frontoffice' },
+  },
+  {
+    path: '/front/costs-summary',
+    name: 'fo-costs-summary',
+    component: CostsSummaryPage,
     meta: { layout: 'frontoffice', area: 'frontoffice' },
   },
 ]
