@@ -248,7 +248,7 @@ const goBack = () => {
         </div>
       </div>
 
-      <div class="col-12 col-lg-4">
+      <!-- <div class="col-12 col-lg-4">
         <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="top: 2rem;">
           <h4 class="h6 fw-bold text-muted text-uppercase mb-4">Informations Rapides</h4>
           
@@ -273,7 +273,7 @@ const goBack = () => {
              Vous ne pouvez modifier ce ticket que via le portail assistance pour le moment.
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

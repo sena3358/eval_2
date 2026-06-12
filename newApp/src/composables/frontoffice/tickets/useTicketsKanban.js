@@ -79,7 +79,7 @@ export const useTicketsKanban = () => {
     try {
       // Pour le Kanban FO, on recupere une liste assez large (ex: 50 derniers tickets)
       // car la pagination par colonne est complexe sans filtrage cote serveur par statut.
-      const res = await api.listTickets({ start: 0, limit: 100 })
+      const res = await api.listTickets({ start: 0, limit: 1000 })
       // Tri par date decroissante (plus recents en haut des colonnes)
       tickets.value = (res.items || []).sort((a,b) => b.id - a.id)
     } catch (e) {
