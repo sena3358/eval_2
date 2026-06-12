@@ -31,7 +31,7 @@ export async function createTicketCost(row, ticketRefToIdMap) {
   // Nettoyage des virgules décimales françaises (ex: "8,7" → 8.7)
   const timeCost = parseFloat(String(row.Time_Cost ?? '0').replace(',', '.')) || 0
   const fixedCost = parseFloat(String(row.Fixed_Cost ?? '0').replace(',', '.')) || 0
-  const actiontime = parseInt(row.Duration_second ?? '0', 10) || 0
+  const actiontime = parseFloat(String(row.Duration_second ?? '0').replace(',', '.')) || 0
 
   const payload = {
     tickets_id: ticketsId,

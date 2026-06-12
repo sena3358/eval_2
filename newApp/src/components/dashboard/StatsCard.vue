@@ -31,7 +31,7 @@ const elementIcon = (itemtype) => elementIcons[itemtype] || 'bi bi-box'
 
 const formatCost = (val) => {
   if (!val && val !== 0) return '—'
-  return Number(val).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'
+  return Number(val).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' '
 }
 
 const formatHours = (seconds) => {
@@ -49,21 +49,21 @@ const formatHours = (seconds) => {
       <div class="col-12 col-md-3">
         <div class="card border-0 bg-primary text-white shadow-lg overflow-hidden h-100 position-relative">
           <div class="card-body p-4 position-relative" style="z-index: 2;">
-            <h6 class="text-white-50 fw-bold text-uppercase mb-2">Parc Informatique</h6>
+            <h6 class="text-white-50 fw-bold text-uppercase mb-2">Items</h6>
             <h1 class="display-4 fw-bold mb-0">{{ loading ? '...' : stats.elements.total }}</h1>
             <p class="mb-0 mt-2 text-white-50 small">Éléments dans l'inventaire</p>
           </div>
-          <i class="bi bi-cpu position-absolute end-0 bottom-0 opacity-10" style="font-size: 8rem; margin-right: -1rem; margin-bottom: -1rem;"></i>
+          <!-- <i class="bi bi-cpu position-absolute end-0 bottom-0 opacity-10" style="font-size: 8rem; margin-right: -1rem; margin-bottom: -1rem;"></i> -->
         </div>
       </div>
       <div class="col-12 col-md-3">
         <div class="card border-0 bg-warning text-dark shadow-lg overflow-hidden h-100 position-relative">
           <div class="card-body p-4 position-relative" style="z-index: 2;">
-            <h6 class="fw-bold text-uppercase mb-2 opacity-75">Tickets Ouverts</h6>
+            <h6 class="fw-bold text-uppercase mb-2 opacity-75">Tickets</h6>
             <h1 class="display-4 fw-bold mb-0">{{ loading ? '...' : stats.tickets.total }}</h1>
             <p class="mb-0 mt-2 small opacity-75">Demandes d'assistance</p>
           </div>
-          <i class="bi bi-life-preserver position-absolute end-0 bottom-0 opacity-10" style="font-size: 8rem; margin-right: -1rem; margin-bottom: -1rem;"></i>
+          <!-- <i class="bi bi-life-preserver position-absolute end-0 bottom-0 opacity-10" style="font-size: 8rem; margin-right: -1rem; margin-bottom: -1rem;"></i> -->
         </div>
       </div>
       <div class="col-12 col-md-3">
@@ -73,7 +73,7 @@ const formatHours = (seconds) => {
             <h2 class="fw-bold mb-0 mt-2">{{ loading ? '...' : formatCost(stats.tickets.costs?.totalCostAll) }}</h2>
             <p class="mb-0 mt-2 text-white-50 small">Tous coûts confondus</p>
           </div>
-          <i class="bi bi-currency-euro position-absolute end-0 bottom-0 opacity-10" style="font-size: 8rem; margin-right: -1rem; margin-bottom: -1rem;"></i>
+          <!-- <i class="bi bi-currency-euro position-absolute end-0 bottom-0 opacity-10" style="font-size: 8rem; margin-right: -1rem; margin-bottom: -1rem;"></i> -->
         </div>
       </div>
       <div class="col-12 col-md-3">
