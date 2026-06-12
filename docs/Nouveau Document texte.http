@@ -1,0 +1,527 @@
+@baseUrl = http://localhost
+@clientId = 8548ecabb0d365b6a92476b8b0e959179b56ec49dd1873f2636af392503eff86
+@clientSecret = c7dd68bf55f0e65d89aa03079c26be7c7e0430b15ce2f34fd776f9ef14c2f761
+@username = glpi
+@password = glpi
+@itemId = 1
+@accessToken = eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI4NTQ4ZWNhYmIwZDM2NWI2YTkyNDc2YjhiMGU5NTkxNzliNTZlYzQ5ZGQxODczZjI2MzZhZjM5MjUwM2VmZjg2IiwianRpIjoiYzgzNzIwNjkyMWE3YzcwOGM4ZTI0MmFkMDU5MDA4MzRiNjA5MGMwYzJkNjJiOWUzMDUzOTkyOGM4MmU2NDYzZjM3ZjcwZDA0MzA5MTA1ZjciLCJpYXQiOjE3ODA0OTQ1NjEuNzkzNzA2LCJuYmYiOjE3ODA0OTQ1NjEuNzkzNzE1LCJleHAiOjE3ODA0OTgxNjEuNjYzODYsInN1YiI6IjIiLCJzY29wZXMiOlsiYXBpIl19.20PzO1bK9GRJYZCEcYY4PPZZxZ86onm0LdZdkyjVA-7whu_NAjglSNAgnW8IqLxZasdfpwhiYBYgLLrd5keWIzgGVJeL60_3w3VJfCbgjI5jbcKbHeEvEaGK3V9hCD3p5fb6qJYiVQLAWqFMlqLYP5QyjE3a_x7A-BepyKGPAfBm9ckpU7VsfQ4z9Qpy1ervFcX6o-cdPT9GuNMKjp0Prcand9l6uRZeaBQoEFDt43bA1pJk2GgufJBNzzFU6z0IqBvd1-qHYJqBG2cGe1KuSPtmXuWdnyG1ZRFgoaFNvSRablKAMC7rWKw2S9xhHSZ03c1mVOG4vC58WXRnaKsw3Q
+
+================================================================================
+# MODULE : SESSION & CORE (Default, Session, Status)
+================================================================================
+
+### Récupération du Token (Password Grant)
+POST {{baseUrl}}/api.php/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&client_id={{clientId}}&client_secret={{clientSecret}}&username={{username}}&password={{password}}&scope=api
+
+###
+
+### Vérification de la session
+GET {{baseUrl}}/api.php/session
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+### Points d'entrée de l'API (Status & Versions)
+GET {{baseUrl}}/api.php
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+### Découverte des routes v2.3
+GET {{baseUrl}}/api.php/v2.3
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+================================================================================
+# MODULE : ADMINISTRATION (User, Group, Entity, Profile...)
+================================================================================
+
+### Liste des Utilisateurs
+GET {{baseUrl}}/api.php/v2.3/Administration/User
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Création d'un Utilisateur (POST) avec TOUS les paramètres
+POST {{baseUrl}}/api.php/v2.3/Administration/User
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "api_user_full",
+  "realname": "Nom complet",
+  "firstname": "Prénom",
+  "password": "api_password_123!",
+  "password2": "api_password_123!",
+  "phone": "+33100000001",
+  "phone2": "+33100000002",
+  "mobile": "+33600000003",
+  "comment": "Commentaire descriptif",
+  "is_active": true,
+  "is_deleted": false,
+  "location": 1,
+  "authtype": 1,
+  "default_profile": 1,
+  "default_entity": 0,
+  "title": 1,
+  "category": 1,
+  "registration_number": "REG-12345",
+  "begin_date": "2024-01-01 10:00:00",
+  "end_date": "2025-01-01 10:00:00",
+  "nickname": "api_nickname",
+  "substitution_start_date": "2024-06-01 10:00:00",
+  "substitution_end_date": "2024-06-15 10:00:00"
+}
+
+### Obtenir un Utilisateur spécifique (GET)
+GET {{baseUrl}}/api.php/v2.3/Administration/User/2
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Mise à jour d'un Utilisateur (PATCH)
+PATCH {{baseUrl}}/api.php/v2.3/Administration/User/2
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "realname": "Nom modifié",
+  "is_active": false
+}
+
+### Suppression d'un Utilisateur (DELETE)
+DELETE {{baseUrl}}/api.php/v2.3/Administration/User/2
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Groupes
+GET {{baseUrl}}/api.php/v2.3/Administration/Group
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Entités
+GET {{baseUrl}}/api.php/v2.3/Administration/Entity
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Profils
+GET {{baseUrl}}/api.php/v2.3/Administration/Profile
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+================================================================================
+# MODULE : ASSETS (Computer, Monitor, Phone, Printer, NetworkEquipment...)
+================================================================================
+
+### Liste des Ordinateurs
+GET {{baseUrl}}/api.php/v2.3/Assets/Computer
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Création d'un Ordinateur (POST) avec TOUS les paramètres
+POST {{baseUrl}}/api.php/v2.3/Assets/Computer
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "PC-TEST-API-FULL",
+  "comment": "Création exhaustive via API v2.3",
+  "status": 1,
+  "entity": 0,
+  "is_recursive": false,
+  "manufacturer": 1,
+  "user": 1,
+  "user_tech": 2,
+  "contact": "John Doe",
+  "contact_num": "+33123456789",
+  "serial": "SN-123456789",
+  "otherserial": "INV-98765",
+  "is_deleted": false,
+  "location": 1,
+  "type": 1,
+  "model": 1,
+  "group": 1,
+  "group_tech": 2,
+  "network": 1,
+  "autoupdatesystem": 1,
+  "is_template": false,
+  "template_name": "",
+  "is_dynamic": false,
+  "ticket_tco": 1500.50
+}
+
+### Obtenir un Ordinateur spécifique (GET)
+GET {{baseUrl}}/api.php/v2.3/Assets/Computer/1
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Mise à jour d'un Ordinateur (PATCH)
+PATCH {{baseUrl}}/api.php/v2.3/Assets/Computer/1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "PC-TEST-API-MODIFIED",
+  "status": 2
+}
+
+### Suppression d'un Ordinateur (DELETE)
+DELETE {{baseUrl}}/api.php/v2.3/Assets/Computer/1
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Moniteurs
+GET {{baseUrl}}/api.php/v2.3/Assets/Monitor
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Equipements Réseau
+GET {{baseUrl}}/api.php/v2.3/Assets/NetworkEquipment
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Périphériques
+GET {{baseUrl}}/api.php/v2.3/Assets/Peripheral
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Logiciels
+GET {{baseUrl}}/api.php/v2.3/Assets/Software
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+================================================================================
+# MODULE : ASSISTANCE (Ticket, Change, Problem)
+================================================================================
+
+### Liste des tickets
+GET {{baseUrl}}/api.php/v2.3/Assistance/Ticket
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Obtenir un ticket spécifique
+GET {{baseUrl}}/api.php/v2.3/Assistance/Ticket/{{itemId}}
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Création d'un Ticket (POST) avec TOUS les paramètres
+POST {{baseUrl}}/api.php/v2.3/Assistance/Ticket
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Ticket exhaustif de test",
+  "content": "&lt;p&gt;Description complète du ticket avec formatage HTML.&lt;/p&gt;",
+  "user_recipient": 1,
+  "user_editor": 1,
+  "is_deleted": false,
+  "category": 1,
+  "location": 1,
+  "urgency": 3,
+  "impact": 3,
+  "priority": 3,
+  "date": "2024-01-01 10:00:00"
+}
+
+### Mise à jour d'un Ticket (PATCH)
+PATCH {{baseUrl}}/api.php/v2.3/Assistance/Ticket/{{itemId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Ticket mis à jour via API",
+  "urgency": 4
+}
+
+### Suppression d'un Ticket (DELETE)
+DELETE {{baseUrl}}/api.php/v2.3/Assistance/Ticket/{{itemId}}
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Changements (Change)
+GET {{baseUrl}}/api.php/v2.3/Assistance/Change
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Problèmes (Problem)
+GET {{baseUrl}}/api.php/v2.3/Assistance/Problem
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+================================================================================
+# MODULE : COMPONENTS (Item_DeviceProcessor, Item_DeviceMemory...)
+================================================================================
+
+### Liste des composants matériels d'un ordinateur (ex. Mémoire)
+GET {{baseUrl}}/api.php/v2.3/Components/Item_DeviceMemory
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Processeurs liés à un ordinateur
+GET {{baseUrl}}/api.php/v2.3/Components/Item_DeviceProcessor
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Disques Durs liés à un ordinateur
+GET {{baseUrl}}/api.php/v2.3/Components/Item_DeviceHardDrive
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+================================================================================
+# MODULE : CUSTOM ASSETS
+================================================================================
+
+### Liste des Custom Assets (si un plugin ou un custom asset est défini)
+GET {{baseUrl}}/api.php/v2.3/CustomAssets/CustomAssetType
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+================================================================================
+# MODULE : DROPDOWNS (Location, State, Manufacturer, Type...)
+================================================================================
+
+### Liste des Lieux (Location)
+GET {{baseUrl}}/api.php/v2.3/Dropdowns/Location
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Statuts (State)
+GET {{baseUrl}}/api.php/v2.3/Dropdowns/State
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Fabricants (Manufacturer)
+GET {{baseUrl}}/api.php/v2.3/Dropdowns/Manufacturer
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Catégories de Tickets (ITILCategory)
+GET {{baseUrl}}/api.php/v2.3/Dropdowns/ITILCategory
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Types d'Ordinateurs
+GET {{baseUrl}}/api.php/v2.3/Dropdowns/ComputerType
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+================================================================================
+# MODULE : GRAPHQL
+================================================================================
+
+### Requête GraphQL Standard
+POST {{baseUrl}}/api.php/v2.3/graphql
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "query": "query { Computer { data { id name } } }"
+}
+
+###
+
+================================================================================
+# MODULE : INVENTORY
+================================================================================
+
+### Requête vers le module d'inventaire
+POST {{baseUrl}}/api.php/v2.3/Inventory
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "deviceid": "test-device-id",
+  "content": {}
+}
+
+###
+
+================================================================================
+# MODULE : KNOWLEDGEBASE
+================================================================================
+
+### Liste des articles de la base de connaissances
+GET {{baseUrl}}/api.php/v2.3/Knowledgebase/KnowbaseItem
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Catégories de la base de connaissances
+GET {{baseUrl}}/api.php/v2.3/Knowledgebase/KnowbaseItemCategory
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+================================================================================
+# MODULE : LOCALIZATION
+================================================================================
+
+### Traductions et locales
+GET {{baseUrl}}/api.php/v2.3/Localization/Locale
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+================================================================================
+# MODULE : MANAGEMENT (Budget, Contract, Supplier, Document...)
+================================================================================
+
+### Liste des Fournisseurs
+GET {{baseUrl}}/api.php/v2.3/Management/Supplier
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Contrats
+GET {{baseUrl}}/api.php/v2.3/Management/Contract
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Budgets
+GET {{baseUrl}}/api.php/v2.3/Management/Budget
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Documents
+GET {{baseUrl}}/api.php/v2.3/Management/Document
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+================================================================================
+# MODULE : NOTES (Notepad)
+================================================================================
+
+### Liste des notes
+GET {{baseUrl}}/api.php/v2.3/Notes/Notepad
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+================================================================================
+# MODULE : NOTIFICATIONS (Notification, Alert)
+================================================================================
+
+### Liste des Notifications
+GET {{baseUrl}}/api.php/v2.3/Notifications/Notification
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Modèles de Notifications
+GET {{baseUrl}}/api.php/v2.3/Notifications/NotificationTemplate
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+================================================================================
+# MODULE : PROJECT (Project, ProjectTask)
+================================================================================
+
+### Liste des Projets
+GET {{baseUrl}}/api.php/v2.3/Project/Project
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Tâches de Projet
+GET {{baseUrl}}/api.php/v2.3/Project/ProjectTask
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+================================================================================
+# MODULE : RULE
+================================================================================
+
+### Liste des Règles (Règles métier pour les tickets, etc.)
+GET {{baseUrl}}/api.php/v2.3/Rule/Rule
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Actions de Règles
+GET {{baseUrl}}/api.php/v2.3/Rule/RuleAction
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+================================================================================
+# MODULE : SETUP (Config, Plugin)
+================================================================================
+
+### Configuration GLPI
+GET {{baseUrl}}/api.php/v2.3/Setup/Config
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Liste des Plugins
+GET {{baseUrl}}/api.php/v2.3/Setup/Plugin
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+================================================================================
+# MODULE : STATISTICS (Report, Dashboard)
+================================================================================
+
+### Rapport Statistiques
+GET {{baseUrl}}/api.php/v2.3/Statistics/Stat
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Tableau de bord
+GET {{baseUrl}}/api.php/v2.3/Statistics/Dashboard
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+================================================================================
+# MODULE : TOOLS (Reminder, RSSFeed, SavedSearch)
+================================================================================
+
+### Liste des Rappels (Notes publiques/privées)
+GET {{baseUrl}}/api.php/v2.3/Tools/Reminder
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Flux RSS
+GET {{baseUrl}}/api.php/v2.3/Tools/RSSFeed
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### Recherches sauvegardées (SavedSearch)
+GET {{baseUrl}}/api.php/v2.3/Tools/SavedSearch
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###

@@ -1,0 +1,201 @@
+### Fichier de Requêtes et Tests pour l'API REST GLPI
+# Compatible VS Code REST Client / IntelliJ HTTP Client
+
+@baseUrl = https://glpi.exemple.com/apirest.php
+@userToken = VOTRE_USER_TOKEN_ICI
+@appToken = VOTRE_APP_TOKEN_ICI
+
+@sessionToken = SESSION
+
+###
+
+# 1. INITIALISATION DE SESSION
+# @name initSession
+GET {{baseUrl}}/initSession
+Authorization: user_token {{userToken}}
+App-Token: {{appToken}}
+Accept: application/json
+
+> {%
+    client.test("Session initialisée avec succès", function () {
+        client.assert(response.status === 200, "Status doit être 200");
+        client.assert(response.body.session_token, "session_token manquant");
+    });
+
+    client.global.set("sessionToken", response.body.session_token);
+%}
+
+###
+
+# 2. RÉCUPÉRATION DES PROFILS UTILISATEUR
+GET {{baseUrl}}/getMyProfiles
+Session-Token: {{sessionToken}}
+App-Token: {{appToken}}
+Accept: application/json
+
+> {%
+    client.test("Profils récupérés", function () {
+        client.assert(response.status === 200, "Status doit être 200");
+        client.assert(response.body.myprofiles, "myprofiles manquant");
+    });
+%}
+
+###
+
+# 3. PROFIL ACTIF
+GET {{baseUrl}}/getActiveProfile
+Session-Token: {{sessionToken}}
+App-Token: {{appToken}}
+Accept: application/json
+
+> {%
+    client.test("Profil actif récupéré", function () {
+        client.assert(response.status === 200, "Status doit être 200");
+        client.assert(response.body.active_profile.id, "ID profil manquant");
+    });
+%}
+
+###
+
+# 4. CHANGEMENT DE PROFIL
+POST {{baseUrl}}/changeActiveProfile
+Session-Token: {{sessionToken}}
+App-Token: {{appToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "profiles_id": 4
+}
+
+> {%
+    client.test("Changement de profil OK", function () {
+        client.assert(response.status === 200, "Status doit être 200");
+    });
+%}
+
+###
+
+# 5. ENTITÉS ACTIVES
+GET {{baseUrl}}/getActiveEntities
+Session-Token: {{sessionToken}}
+App-Token: {{appToken}}
+Accept: application/json
+
+> {%
+    client.test("Entités récupérées", function () {
+        client.assert(response.status === 200, "Status doit être 200");
+    });
+%}
+
+###
+
+# 6. CRÉATION TICKET
+# @name createTicket
+POST {{baseUrl}}/Ticket
+Session-Token: {{sessionToken}}
+App-Token: {{appToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "input": {
+    "name": "Ticket de test via API REST",
+    "content": "Ticket généré automatiquement",
+    "urgency": 3
+  }
+}
+
+> {%
+    client.test("Ticket créé", function () {
+        client.assert(response.status === 201, "Status doit être 201");
+        client.assert(response.body.id, "ID ticket manquant");
+    });
+
+    client.global.set("newTicketId", response.body.id);
+%}
+
+###
+
+# 7. LIRE TICKET
+GET {{baseUrl}}/Ticket/{{newTicketId}}
+Session-Token: {{sessionToken}}
+App-Token: {{appToken}}
+Accept: application/json
+
+> {%
+    client.test("Ticket récupéré", function () {
+        client.assert(response.status === 200, "Status doit être 200");
+    });
+%}
+
+###
+
+# 8. LISTE ORDINATEURS
+GET {{baseUrl}}/Computer?range=0-10
+Session-Token: {{sessionToken}}
+App-Token: {{appToken}}
+Accept: application/json
+
+> {%
+    client.test("Computers list OK", function () {
+        client.assert(response.status === 200 || response.status === 206);
+    });
+%}
+
+###
+
+# 9. SEARCH TICKETS
+GET {{baseUrl}}/search/Ticket?forcedisplay%5B0%5D=1&forcedisplay%5B1%5D=2
+Session-Token: {{sessionToken}}
+App-Token: {{appToken}}
+Accept: application/json
+
+> {%
+    client.test("Search OK", function () {
+        client.assert(response.status === 200);
+        client.assert(response.body.data);
+    });
+%}
+
+###
+
+# 10. SEARCH OPTIONS
+GET {{baseUrl}}/listSearchOptions/Ticket
+Session-Token: {{sessionToken}}
+App-Token: {{appToken}}
+Accept: application/json
+
+> {%
+    client.test("Search options OK", function () {
+        client.assert(response.status === 200);
+    });
+%}
+
+###
+
+# 11. DELETE TICKET
+DELETE {{baseUrl}}/Ticket/{{newTicketId}}
+Session-Token: {{sessionToken}}
+App-Token: {{appToken}}
+Accept: application/json
+
+> {%
+    client.test("Ticket supprimé", function () {
+        client.assert(response.status === 200);
+    });
+%}
+
+###
+
+# 12. KILL SESSION
+GET {{baseUrl}}/killSession
+Session-Token: {{sessionToken}}
+App-Token: {{appToken}}
+Accept: application/json
+
+> {%
+    client.test("Session fermée", function () {
+        client.assert(response.status === 200);
+    });
+%}
